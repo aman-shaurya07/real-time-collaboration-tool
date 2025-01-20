@@ -1,77 +1,3 @@
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main  # Trigger pipeline when code is pushed to 'main' branch
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Set environment variables
-      run: |
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
-        echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ env.DOCKER_USERNAME }}
-        password: ${{ env.DOCKER_PASSWORD }}
-
-    - name: Build and push backend image
-      run: |
-        docker build -t ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest ./backend
-        docker push ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest
-
-    - name: Build and push frontend image
-      run: |
-        docker build -t ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest ./frontend
-        docker push ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Set environment variables for deployment
-      run: |
-        echo "SERVER_IP=${{ secrets.SERVER_IP }}" >> $GITHUB_ENV
-        echo "SERVER_USER=${{ secrets.SERVER_USER }}" >> $GITHUB_ENV
-        echo "SERVER_PASSWORD=${{ secrets.SERVER_PASSWORD }}" >> $GITHUB_ENV
-        echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
-
-    - name: SSH into Server and Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.SERVER_IP }}
-        username: ${{ env.SERVER_USER }}
-        password: ${{ env.SERVER_PASSWORD }}
-        script: |
-          docker pull ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest
-          docker pull ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest
-          docker-compose down
-          docker-compose up -d
-
-
-
-
-
-
-
-
-
 # name: CI/CD Pipeline
 
 # on:
@@ -93,11 +19,10 @@ jobs:
 #     - name: Set up Docker Buildx
 #       uses: docker/setup-buildx-action@v3
 
-#     - name: Extract secrets
+#     - name: Set environment variables
 #       run: |
-#         echo "${{ secrets.COLLAB_TOOL_SECRETS }}" > .env
-#         cat .env | sed 's/ /\n/g' >> $GITHUB_ENV
-
+#         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
+#         echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> $GITHUB_ENV
 
 #     - name: Log in to Docker Hub
 #       uses: docker/login-action@v3
@@ -120,10 +45,12 @@ jobs:
 #     runs-on: ubuntu-latest
 
 #     steps:
-#     - name: Extract secrets
+#     - name: Set environment variables for deployment
 #       run: |
-#         echo "${{ secrets.COLLAB_TOOL_SECRETS }}" > .env
-#         cat .env | sed 's/ /\n/g' >> $GITHUB_ENV
+#         echo "SERVER_IP=${{ secrets.SERVER_IP }}" >> $GITHUB_ENV
+#         echo "SERVER_USER=${{ secrets.SERVER_USER }}" >> $GITHUB_ENV
+#         echo "SERVER_PASSWORD=${{ secrets.SERVER_PASSWORD }}" >> $GITHUB_ENV
+#         echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
 
 #     - name: SSH into Server and Deploy
 #       uses: appleboy/ssh-action@master
@@ -136,3 +63,76 @@ jobs:
 #           docker pull ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest
 #           docker-compose down
 #           docker-compose up -d
+
+
+
+
+
+
+
+
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger pipeline when code is pushed to 'main' branch
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Extract secrets
+      run: |
+        echo "${{ secrets.COLLAB_TOOL_SECRETS }}" > .env
+        cat .env | sed 's/ /\n/g' >> $GITHUB_ENV
+
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ env.DOCKER_PASSWORD }}
+
+    - name: Build and push backend image
+      run: |
+        docker build -t ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest ./backend
+        docker push ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest
+
+    - name: Build and push frontend image
+      run: |
+        docker build -t ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest ./frontend
+        docker push ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Extract secrets
+      run: |
+        echo "${{ secrets.COLLAB_TOOL_SECRETS }}" > .env
+        cat .env | sed 's/ /\n/g' >> $GITHUB_ENV
+
+    - name: SSH into Server and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.SERVER_IP }}
+        username: ${{ env.SERVER_USER }}
+        password: ${{ env.SERVER_PASSWORD }}
+        script: |
+          docker pull ${{ env.DOCKER_USERNAME }}/collab-doc-backend:latest
+          docker pull ${{ env.DOCKER_USERNAME }}/collab-doc-frontend:latest
+          docker-compose down
+          docker-compose up -d

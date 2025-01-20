@@ -1,0 +1,10 @@
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'to')","timestamp":"2025-01-18T10:31:20.663Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'to')","timestamp":"2025-01-18T10:31:37.328Z"}
+{"level":"error","message":"Error in join-document: Cannot read properties of null (reading 'id')","timestamp":"2025-01-18T19:04:58.364Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'to')","timestamp":"2025-01-18T19:05:13.213Z"}
+{"level":"error","message":"Error in join-document: Cannot read properties of null (reading 'id')","timestamp":"2025-01-19T05:10:44.267Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'emit')","timestamp":"2025-01-19T05:10:53.433Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'emit')","timestamp":"2025-01-19T05:29:47.808Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'emit')","timestamp":"2025-01-19T05:32:42.554Z"}
+{"level":"error","message":"Error in join-document: Cannot read properties of null (reading 'id')","timestamp":"2025-01-19T05:33:54.313Z"}
+{"level":"error","message":"Error adding collaborator: Cannot read properties of undefined (reading 'emit')","timestamp":"2025-01-19T05:34:04.793Z"}

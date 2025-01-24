@@ -1,4 +1,4 @@
-name: Local CI/CD Pipeline 1
+name: Local CI/CD Pipeline 2
 
 on:
   push:

@@ -1,12 +1,11 @@
-version: '3.8'
-
 services:
   backend:
     build: ./backend
     ports:
       - "5100:5100"
-    env_file:
-      - ./backend/.env
+    environment:
+      MONGO_URI: "mongodb://admin:adminpassword@mongodb:27017/collab-docs?authSource=admin"
+      JWT_SECRET: "9bb218dd821b29f30145a70da5abdd9c999318c7dedaab564139764e20f8e8660f216c5e1cfd9a4a40e65bf9e4a3b9b7a8048efff53f92a1f4e99d742dc2e400"
     depends_on:
       - mongodb
     volumes:
@@ -17,6 +16,8 @@ services:
     build: ./frontend
     ports:
       - "80:80"
+    environment:
+      FRONTEND_URL: "http://localhost:80"
     depends_on:
       - backend
     volumes:
@@ -36,3 +37,55 @@ services:
 
 volumes:
   mongodb_data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# version: '3.8'
+
+# services:
+#   backend:
+#     build: ./backend
+#     ports:
+#       - "5100:5100"
+#     env_file:
+#       - ./backend/.env
+#     depends_on:
+#       - mongodb
+#     volumes:
+#       - ./backend:/app
+#       - /app/node_modules
+
+#   frontend:
+#     build: ./frontend
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+#     volumes:
+#       - ./frontend:/app
+#       - /app/node_modules
+
+#   mongodb:
+#     image: mongo:latest
+#     container_name: collaborative-doc-mongo
+#     ports:
+#       - "27017:27017"
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: admin
+#       MONGO_INITDB_ROOT_PASSWORD: adminpassword
+#     volumes:
+#       - mongodb_data:/data/db
+
+# volumes:
+#   mongodb_data:

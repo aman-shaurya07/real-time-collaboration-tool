@@ -16,9 +16,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Load environment variables
+      - name: Load environment variables from GitHub Secrets
         run: |
-          echo "Loading environment variables"
+          echo "${{ secrets.colab_tool_secret }}" > .env
           set -o allexport
           source .env
           set +o allexport
@@ -47,9 +47,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Load environment variables
+      - name: Load environment variables from GitHub Secrets
         run: |
-          echo "Loading environment variables"
+          echo "${{ secrets.colab_tool_secret }}" > .env
           set -o allexport
           source .env
           set +o allexport
